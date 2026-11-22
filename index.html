@@ -5,421 +5,385 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Тёмный Квест</title>
 <style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0;height:100%}
-@supports (-webkit-touch-callout:none){html{height:-webkit-fill-available}}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(180deg,#0b0e1a,#141830);color:#e8e6f0;min-height:100dvh;padding-bottom:76px;overscroll-behavior:none}
-#err{position:fixed;top:0;left:0;right:0;background:#c0392b;color:#fff;padding:8px 12px;font-size:12px;z-index:99;display:none;word-break:break-word}
-#toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#232a4d;border:1px solid #4a55a2;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;z-index:98;display:none;max-width:90vw;text-align:center}
-header{position:sticky;top:0;background:rgba(11,14,26,.92);backdrop-filter:blur(6px);padding:10px 12px 8px;z-index:10}
-.row{display:flex;justify-content:space-between;font-size:14px;gap:8px;flex-wrap:wrap}
-.row b{color:#ffd75e}
-#hZone{color:#9fb4ff;font-size:13px}
-.bar{height:8px;border-radius:6px;background:#20263f;margin-top:8px;overflow:hidden}
-.bar>div{height:100%;border-radius:6px;transition:width .15s}
-#ebarFill{background:linear-gradient(90deg,#39d353,#8ff06a);width:100%}
-#hpFill{background:linear-gradient(90deg,#ff5252,#ff8a65);width:100%}
-main{padding:12px}
-.tab.hidden{display:none}
-.hidden{display:none!important}
-.enemy-wrap{position:relative;text-align:center;margin-top:8px}
-.boss{color:#ffb020;font-weight:700;letter-spacing:2px;font-size:14px;margin-bottom:6px}
-#enemy{display:inline-flex;align-items:center;justify-content:center;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,#2a3060,#171b36);border:3px solid #4a55a2;font-size:70px;user-select:none;cursor:pointer;transition:transform .08s;touch-action:manipulation}
-#enemy:active{transform:scale(.93)}
-.stage{text-align:center;margin-top:10px;color:#9fb4ff;font-size:15px}
-.hplbl{text-align:center;font-size:13px;color:#c9cbe0;margin-top:4px}
-#floats{position:fixed;inset:0;pointer-events:none;z-index:50}
-.fl{position:absolute;font-weight:700;pointer-events:none;animation:flup .9s ease-out forwards;text-shadow:0 2px 6px #000}
-.fl.crit{color:#ffb020;font-size:20px}
-.fl.norm{color:#fff;font-size:16px}
-.fl.gold{color:#ffd75e;font-size:15px}
-@keyframes flup{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-70px)}}
-#chest{position:absolute;width:56px;height:56px;font-size:36px;display:flex;align-items:center;justify-content:center;background:rgba(255,176,32,.15);border:2px solid #ffb020;border-radius:14px;cursor:pointer;z-index:5;animation:pulse 1s infinite}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
-button{font-family:inherit}
-.gift{display:block;width:100%;margin-top:14px;padding:12px;border-radius:12px;border:0;background:linear-gradient(90deg,#7b3ff2,#b45cff);color:#fff;font-size:15px;font-weight:700}
-.prest{display:block;width:100%;margin-top:12px;padding:12px;border-radius:12px;border:1px solid #4a55a2;background:transparent;color:#9fb4ff;font-size:14px}
-.prest:disabled{opacity:.4}
-h2{font-size:18px;margin:4px 0 12px}
-.upg{display:flex;align-items:center;gap:10px;background:#171b36;border:1px solid #2a3060;border-radius:12px;padding:10px 12px;margin-bottom:8px}
-.upg .ic{font-size:24px}
-.upg .info{flex:1;min-width:0}
-.upg .nm{font-weight:600;font-size:14px}
-.upg .eff{font-size:12px;color:#9fb4ff}
-.upg .lv{font-size:12px;color:#9aa4b2}
-.buy{padding:8px 12px;border-radius:10px;border:0;background:#ffd75e;color:#1a1500;font-weight:700;font-size:13px;white-space:nowrap}
-.buy:disabled{background:#3a4066;color:#8890b8}
-.slotgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.slot{background:#171b36;border:1px solid #2a3060;border-radius:12px;padding:10px;font-size:12px;min-height:64px}
-.slot .t{color:#9aa4b2;font-size:11px}
-.slot .v{color:#9fb4ff}
-.inv{display:flex;align-items:center;gap:8px;background:#171b36;border:1px solid #2a3060;border-radius:12px;padding:8px 10px;margin-bottom:6px;font-size:13px}
-.inv .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.inv .eq{color:#39d353;font-size:12px}
-.sell{padding:6px 10px;border-radius:8px;border:0;background:#3a4066;color:#c9cbe0;font-size:12px}
-.rec{display:flex;align-items:center;gap:10px;background:#171b36;border:1px solid #2a3060;border-radius:12px;padding:10px 12px;margin-bottom:6px;font-size:14px}
-.rec .med{width:26px;text-align:center;font-size:18px}
-.lbname{margin-bottom:10px;font-size:14px}
-.lbname input{background:#171b36;border:1px solid #2a3060;color:#e8e6f0;border-radius:10px;padding:8px 10px;font-size:14px;width:150px}
-.btn{display:block;width:100%;padding:11px;border-radius:12px;border:0;background:#4a55a2;color:#fff;font-size:14px;font-weight:600;margin-bottom:8px}
-.btn.ghost{background:transparent;border:1px solid #4a55a2;color:#9fb4ff}
-.lbr{display:flex;align-items:center;gap:10px;background:#171b36;border:1px solid #2a3060;border-radius:12px;padding:9px 12px;margin-bottom:6px;font-size:13px}
-.lbr.me{border-color:#ffd75e;background:#221f33}
-.lbr .n{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.muted{color:#8890b8;font-size:13px;padding:8px 0}
-nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:rgba(15,18,35,.97);border-top:1px solid #2a3060;padding-bottom:env(safe-area-inset-bottom);z-index:20}
-nav button{flex:1;background:none;border:0;color:#8890b8;font-size:20px;padding:8px 0 6px;display:flex;flex-direction:column;align-items:center;gap:2px}
-nav button span{font-size:10px}
-nav button.on{color:#ffd75e}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{height:100%}
+body{font-family:-apple-system,'Segoe UI',Roboto,sans-serif;background:#0b0e1a;color:#e8eaf6;height:100%;height:-webkit-fill-available;overflow:hidden}
+#app{display:flex;flex-direction:column;height:100%;max-width:520px;margin:0 auto;padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+#errbar{display:none;position:fixed;top:0;left:0;right:0;background:#c62828;color:#fff;padding:10px 14px;font-size:13px;z-index:99;white-space:pre-wrap}
+header{padding:14px 16px 8px;display:flex;align-items:center;gap:16px;font-size:17px;font-weight:700}
+header .z{margin-left:auto;color:#9fa8da;font-size:14px;font-weight:600}
+#pbar{height:8px;background:#1a2140;border-radius:4px;margin:0 16px 10px;overflow:hidden}
+#pbar>div{height:100%;background:linear-gradient(90deg,#43d17a,#a8e063);width:0%;transition:width .15s;border-radius:4px}
+.view{display:none;flex:1;overflow-y:auto;padding:8px 16px 20px}
+.view.on{display:block}
+.tabs{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:0 auto;background:#10142b;border-top:1px solid #232a52;display:flex;z-index:10;padding-bottom:env(safe-area-inset-bottom)}
+.tabs button{flex:1;background:none;border:none;color:#7d87b8;font-size:11px;padding:10px 0 8px;cursor:pointer}
+.tabs button span{display:block;font-size:20px;margin-bottom:2px}
+.tabs button.on{color:#ffd54f}
+.enemy-wrap{display:flex;flex-direction:column;align-items:center;padding:18px 0 6px;position:relative;min-height:300px}
+#ename{font-size:15px;color:#9fa8da;margin-bottom:6px}
+#ehpbar{width:90%;height:14px;background:#1a2140;border-radius:7px;overflow:hidden;margin-bottom:4px}
+#ehpbar>div{height:100%;background:linear-gradient(90deg,#e53935,#ff8a65);transition:width .1s}
+#ehptext{font-size:13px;color:#b0b8d8;margin-bottom:10px}
+#emon{font-size:86px;cursor:pointer;transition:transform .06s;line-height:1;padding:20px 40px}
+#emon:active{transform:scale(.9)}
+#tapzone{position:absolute;inset:0;pointer-events:none}
+.fnum{position:absolute;pointer-events:none;font-weight:800;font-size:20px;animation:fl 1s forwards;text-shadow:0 2px 6px rgba(0,0,0,.6)}
+.fnum.crit{color:#ffd54f;font-size:28px}
+.fnum.norm{color:#fff}
+@keyframes fl{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-70px)}}
+#chest{display:none;position:absolute;font-size:44px;cursor:pointer;animation:pulse .8s infinite;filter:drop-shadow(0 0 12px #ffd54f)}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+.btn{display:block;width:100%;background:#3949ab;color:#fff;border:none;border-radius:12px;padding:14px;font-size:16px;font-weight:700;cursor:pointer;margin-top:10px}
+.btn:disabled{background:#2a2f4d;color:#5a6180}
+.btn.ghost{background:#1a2140;color:#9fa8da}
+.btn.gold{background:#f9a825;color:#1a1a1a}
+.card{background:#141936;border:1px solid #232a52;border-radius:14px;padding:14px;margin-bottom:10px}
+.card h3{font-size:15px;margin-bottom:4px}
+.card .d{font-size:13px;color:#8d96c4;margin-bottom:8px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.lvl{color:#ffd54f;font-weight:700;font-size:13px;white-space:nowrap}
+.mini{background:#3949ab;color:#fff;border:none;border-radius:9px;padding:8px 14px;font-weight:700;cursor:pointer;white-space:nowrap}
+.mini:disabled{background:#252a4a;color:#5a6180}
+.mini.sell{background:#5c2b3a;color:#ff8a9b}
+.slotrow{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #1d2348}
+.slotrow:last-child{border:none}
+.slotrow .ic{font-size:24px}
+.item{padding:9px 12px;border-radius:10px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;font-size:14px}
+.r0{background:#1a2140;color:#b0b8d8}.r1{background:#12283d;color:#4fc3f7}.r2{background:#2b1c44;color:#ba68c8}.r3{background:#3d2b12;color:#ffd54f}
+.lb-item{display:flex;align-items:center;gap:10px;background:#141936;border:1px solid #232a52;border-radius:12px;padding:10px 14px;margin-bottom:8px;font-size:15px}
+.lb-item.me{border-color:#ffd54f;background:#1c2148}
+.lb-item .st{margin-left:auto;color:#9fa8da;font-size:13px;white-space:nowrap}
+input{background:#141936;border:1px solid #2a3160;color:#fff;border-radius:10px;padding:12px;font-size:16px;width:100%;margin:6px 0}
+input:focus{outline:1px solid #5c6bc0}
+#lbmsg{font-size:13px;color:#8d96c4;margin:8px 0;min-height:18px}
+#lbmsg.err{color:#ef9a9a}
+#lbmsg.ok{color:#a5d6a7}
+h2{font-size:20px;margin:8px 0 12px}
+.rec-item{display:flex;justify-content:space-between;padding:10px 14px;background:#141936;border-radius:12px;margin-bottom:8px;font-size:14px}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:120px;background:#2a3160;color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;z-index:50;opacity:0;transition:opacity .3s;pointer-events:none;text-align:center;max-width:85%}
 </style>
 </head>
 <body>
-<div id="err"></div>
-<div id="toast"></div>
+<div id="errbar"></div>
+<div id="app">
 <header>
-  <div class="row"><span>🪙 <b id="hGold">0</b></span><span>💎 <b id="hCr">0</b></span><span id="hZone"></span></div>
-  <div class="bar"><div id="ebarFill"></div></div>
+<span id="hgold">🪙 0</span><span id="hcr">💎 0</span><span class="z" id="hzone"></span>
 </header>
-<main>
-  <section id="tab-battle" class="tab">
-    <div class="enemy-wrap">
-      <div id="bossBadge" class="boss hidden">👑 БОСС</div>
-      <div id="enemy">🌲</div>
-      <div id="chest" class="hidden">🎁</div>
-    </div>
-    <div class="stage" id="stageLbl"></div>
-    <div class="bar"><div id="hpFill"></div></div>
-    <div class="hplbl" id="hpLbl"></div>
-    <button id="giftBtn" class="gift hidden"></button>
-    <button id="prestBtn" class="prest"></button>
-  </section>
-  <section id="tab-upg" class="tab hidden"><h2>⚡ Улучшения</h2><div id="upgList"></div></section>
-  <section id="tab-inv" class="tab hidden"><h2>🎒 Снаряжение</h2><div id="slotGrid"></div><div id="invList"></div></section>
-  <section id="tab-rec" class="tab hidden"><h2>🎖️ Мои рекорды</h2><div id="recList"></div></section>
-  <section id="tab-lb" class="tab hidden"><h2>🏆 Онлайн-рейтинг</h2>
-    <div class="lbname">Имя в рейтинге: <input id="lbName" maxlength="16" placeholder="Игрок"></div>
-    <button id="lbSend" class="btn">📤 Отправить результат</button>
-    <button id="lbRef" class="btn ghost">🔄 Обновить таблицу</button>
-    <div id="lbList"></div>
-  </section>
-</main>
-<nav>
-  <button data-tab="battle" class="on">⚔️<span>Бой</span></button>
-  <button data-tab="upg">⚡<span>Апгрейды</span></button>
-  <button data-tab="inv">🎒<span>Сумка</span></button>
-  <button data-tab="rec">🎖️<span>Рекорды</span></button>
-  <button data-tab="lb">🏆<span>Рейтинг</span></button>
-</nav>
-<div id="floats"></div>
+<div id="pbar"><div id="pfill"></div></div>
+
+<div class="view on" id="v-battle">
+ <div class="enemy-wrap">
+  <div id="ename"></div>
+  <div id="ehpbar"><div id="ehpfill"></div></div>
+  <div id="ehptext"></div>
+  <div id="emon">👹</div>
+  <div id="tapzone"></div>
+  <div id="chest">🎁</div>
+ </div>
+</div>
+
+<div class="view" id="v-up"><h2>⚡ Апгрейды</h2><div id="uplist"></div>
+ <div class="card" id="rebirth"><h3>🌀 Перерождение</h3><div class="d" id="rbinfo"></div><button class="btn gold" id="rbbtn">🌀 Переродиться</button></div>
+</div>
+
+<div class="view" id="v-bag"><h2>🎒 Сумка</h2><div id="slots"></div><h2 style="margin-top:16px">Инвентарь</h2><div id="invlist"></div></div>
+
+<div class="view" id="v-rec"><h2>🏅 Рекорды забегов</h2><div id="reclist"></div></div>
+
+<div class="view" id="v-lb"><h2>🏆 Онлайн-рейтинг</h2>
+ <div class="card">
+  <div class="d">Имя в рейтинге:</div>
+  <input id="lbname" maxlength="16" placeholder="Ваше имя">
+  <button class="btn" id="lbsend">📤 Отправить результат</button>
+  <button class="btn ghost" id="lbrefresh">🔄 Обновить таблицу</button>
+  <div id="lbmsg"></div>
+ </div>
+ <div id="lblist"></div>
+</div>
+
+<div class="tabs">
+ <button data-v="battle" class="on"><span>⚔️</span>Бой</button>
+ <button data-v="up"><span>⚡</span>Апгрейды</button>
+ <button data-v="bag"><span>🎒</span>Сумка</button>
+ <button data-v="rec"><span>🏅</span>Рекорды</button>
+ <button data-v="lb"><span>🏆</span>Рейтинг</button>
+</div>
+</div>
+<div id="toast"></div>
 <script>
-"use strict";
 // ===== НАСТРОЙКА ОНЛАЙН-РЕЙТИНГА (Supabase) =====
-const SUPABASE_URL = "https://fblnukkcvglfsnyiyiwv.supabase.co";
-const SUPABASE_KEY = "sb_publishable_f2xL88D11mm82b0QHFg6eQ_xN0VBTkG";
-// ================================================
+var SUPA_URL='https://fblnukkcvglfsnyiyiwv.supabase.co';
+var SUPA_KEY='sb_publishable_f2xL88D11mm82b0QHFg6eQ_xN0VBTkG';
 
-const $=id=>document.getElementById(id);
-window.addEventListener('error',e=>{const b=$('err');b.style.display='block';b.textContent='Ошибка: '+e.message+(e.lineno?' (строка '+e.lineno+')':'');});
+window.addEventListener('error',function(e){var b=document.getElementById('errbar');b.style.display='block';b.textContent='Ошибка: '+e.message+' (строка '+(e.lineno||'?')+')';});
 
-const tg=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
-if(tg){try{tg.ready();tg.expand();}catch(e){}}
-function haptic(){if(tg&&tg.HapticFeedback){try{tg.HapticFeedback.impactOccurred('light');}catch(e){}}}
+var tg=null;try{if(window.Telegram&&window.Telegram.WebApp){tg=window.Telegram.WebApp;tg.expand();}}catch(e){}
+function buzz(){try{if(tg&&tg.HapticFeedback)tg.HapticFeedback.impactOccurred('light');}catch(e){}}
+function toast(t){var el=document.getElementById('toast');el.textContent=t;el.style.opacity=1;clearTimeout(el._t);el._t=setTimeout(function(){el.style.opacity=0;},2500);}
 
-const ZONES=[["Волшебный лес","🌲"],["Мрачные пещеры","🕳️"],["Огненные пещеры","🔥"],["Ледяные пустоши","❄️"],["Небесная цитадель","☁️"],["Бездна","🌌"]];
-const EMO=[["🌲","🌳","🐗","🧚","🦊"],["🦇","🕷️","🦎","👹","🪨"],["🔥","🐲","👹","🧟","🌋"],["❄️","🐻","🧙","🦌","⛄"],["☁️","🦅","⚡","🗿","👑"],["🌌","👾","🛸","💀","🌑"]];
-const RAR=[["Обычный","#9aa4b2",1],["Редкий","#4da3ff",2],["Эпический","#b45cff",4],["Легендарный","#ffb020",9]];
-const SLOTS=[["weapon","⚔️","Оружие","урон за тап"],["armor","🛡️","Броня","сила спутника"],["amulet","📿","Амулет","шанс крита"],["ring","💍","Кольцо","золото"]];
-const NAMES={weapon:["Ржавый клинок","Кинжал","Стальной клинок","Меч","Топор войны","Клык дракона"],armor:["Тряпка","Кожаный доспех","Кольчуга","Латы","Панцирь","Эгида"],amulet:["Бубенец","Оберег","Амулет","Талисман","Реликвия","Сердце звёзды"],ring:["Кольцо","Печатка","Перстень","Знак власти","Печать","Кольцо бесконечности"]};
-const UPG=[
- ["finger","💪","Сильный палец",10,1.5,"+1 урона за тап"],
- ["comp","🤝","Клик-бот",25,1.6,"+0.5 урона в секунду"],
- ["crit","🎯","Меткость",50,1.7,"+1% шанс крита"],
- ["critPow","💥","Ярость",80,1.8,"+25% к силе крита"],
- ["greed","💰","Жадность",40,1.65,"+20% золота"],
- ["batt","🔋","Батарейка",30,1.7,"+10 энергии, +0.2/сек"]
+// ===== КОНСТАНТЫ =====
+var ZONES=[{n:'Волшебный лес',i:'🌲'},{n:'Мрачные пещеры',i:'🕳️'},{n:'Огненные пещеры',i:'🌋'},{n:'Ледяные пустоши',i:'❄️'},{n:'Небесная цитадель',i:'☁️'},{n:'Бездна',i:'🌌'}];
+var EMO=[['🐀','🐺','🕷️','🦇'],['🦂','🐍','👻','💀'],['🔥','👹','🐉','😈'],['🧊','🐻‍❄️','❄️','🥶'],['🦅','⚡','🗿','👼'],['😈','👾','☠️','🔻']];
+var RAR=[{n:'обычный',c:0},{n:'редкий',c:1},{n:'эпический',c:2},{n:'легендарный',c:3}];
+var SLOTS={weapon:{n:'Оружие',i:'⚔️'},armor:{n:'Броня',i:'🛡️'},amulet:{n:'Амулет',i:'📿'},ring:{n:'Кольцо',i:'💍'}};
+var UPD=[
+ {k:'sword',n:'⚔️ Меч',d:'Урон за тап',c:10,m:1.4},
+ {k:'companion',n:'🐾 Спутник',d:'Урон в секунду',c:25,m:1.5},
+ {k:'precision',n:'🎯 Меткость',d:'Шанс крита',c:50,m:1.6},
+ {k:'rage',n:'💥 Ярость',d:'Сила крита',c:80,m:1.6},
+ {k:'greed',n:'💰 Жадность',d:'Золото с врагов',c:40,m:1.5}
 ];
 
-const DEFAULT={gold:0,crystals:0,stage:1,kills:0,best:1,upg:{finger:0,comp:0,crit:0,critPow:0,greed:0,batt:0},energy:50,lastSeen:0,daily:{last:"",streak:0},inv:[],rec:[],name:"",lastSubStage:0,lastSubTime:0,hp:-1};
+// ===== СОСТОЯНИЕ =====
+var DEF={gold:0,crystals:0,stage:1,up:{sword:0,companion:0,precision:0,rage:0,greed:0},inv:[],rec:[],name:'',streak:0,lastDaily:'',lastSeen:Date.now()};
+var S=load(),E=null,chestTimer=null;
 
-function cl(v,d,max){v=Number(v);return(isFinite(v)&&v>=0)?Math.min(v,max||1e18):d;}
+function num(v,d){return (typeof v==='number'&&isFinite(v)&&v>=0)?v:d;}
 function load(){
- let s=null;try{s=JSON.parse(localStorage.getItem('dq_save')||"null");}catch(e){}
- const d=JSON.parse(JSON.stringify(DEFAULT));
- if(!s||typeof s!=="object")return d;
- d.gold=cl(s.gold,0);d.crystals=cl(s.crystals,0,1e12);d.stage=Math.min(Math.max(1,Math.floor(cl(s.stage,1))),1e6);
- d.kills=Math.floor(cl(s.kills,0));d.best=Math.min(Math.max(1,Math.floor(cl(s.best,d.stage))),1e6);
- if(s.upg&&typeof s.upg==="object"){for(const u of UPG){d.upg[u[0]]=Math.floor(cl(s.upg[u[0]],0,1e6));}}
- d.energy=cl(s.energy,50);
- d.lastSeen=cl(s.lastSeen,0);
- if(s.daily&&typeof s.daily==="object"){d.daily.last=typeof s.daily.last==="string"?s.daily.last:"";d.daily.streak=Math.floor(cl(s.daily.streak,0,1e5));}
- if(Array.isArray(s.inv)){for(const it of s.inv.slice(0,40)){if(it&&it.slot&&NAMES[it.slot]&&typeof it.p==="number"&&isFinite(it.p)&&it.rar>=0&&it.rar<4)d.inv.push({slot:it.slot,rar:it.rar|0,p:Math.max(1,it.p),name:String(it.name).slice(0,40)});}}
- if(Array.isArray(s.rec)){for(const r of s.rec.slice(0,10)){if(r)d.rec.push({s:Math.floor(cl(r.s,1)),t:Math.floor(cl(r.t,0))});}}
- d.name=typeof s.name==="string"?s.name.slice(0,16):"";
- d.lastSubStage=Math.floor(cl(s.lastSubStage,0));d.lastSubTime=cl(s.lastSubTime,0);
- d.hp=cl(s.hp,-1);
- return d;
-}
-let S=load();
-function save(){try{S.lastSeen=Date.now();localStorage.setItem('dq_save',JSON.stringify(S));}catch(e){}}
-let saveT=null;function saveSoon(){if(saveT)return;saveT=setTimeout(()=>{saveT=null;save();},800);}
-
-function itemBonus(slot){let p=0;for(const it of S.inv)if(it.slot===slot&&it.p>p)p=it.p;return p;}
-function prestMult(){return 1+S.crystals*0.05;}
-function clickDmg(){return (1+S.upg.finger)*prestMult()*(1+itemBonus('weapon')/100);}
-function compDps(){return S.upg.comp*0.5*prestMult()*(1+itemBonus('armor')/100);}
-function critChance(){return Math.min(75,S.upg.crit+itemBonus('amulet')/20);}
-function critMult(){return 2+S.upg.critPow*0.25;}
-function goldMult(){return (1+S.upg.greed*0.2)*prestMult()*(1+itemBonus('ring')/100);}
-function energyMax(){return 50+S.upg.batt*10;}
-function upgCost(i){return Math.floor(UPG[i][3]*Math.pow(UPG[i][4],S.upg[UPG[i][0]]));}
-function isBoss(){return S.stage%10===0;}
-function enemyHpMax(){return Math.min(1e18,Math.floor(10*Math.pow(1.17,S.stage-1))*(isBoss()?6:1));}
-function goldForKill(){return Math.max(1,Math.floor((3+S.stage*1.2)*goldMult()*(isBoss()?10:1)));}
-function crystalsFor(){return S.stage>=20?Math.floor(Math.pow(S.stage,0.7)):0;}
-function fmt(n){n=Math.floor(n);if(n<1000)return String(n);if(n<1e6)return (n/1e3).toFixed(1).replace(/\.0$/,'')+'K';if(n<1e9)return (n/1e6).toFixed(2)+'M';return (n/1e9).toFixed(2)+'B';}
-
-let toastT=null;
-function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(toastT);toastT=setTimeout(()=>{t.style.display='none';},2600);}
-
-function floatNum(e,text,cls){
- const d=document.createElement('div');d.className='fl '+cls;d.textContent=text;
- let x=innerWidth/2,y=innerHeight/2-80;
- if(e&&e.clientX!==undefined){x=e.clientX;y=e.clientY-20;}
- x=Math.max(30,Math.min(innerWidth-30,x));y=Math.max(60,y);
- d.style.left=x+'px';d.style.top=y+'px';
- $('floats').appendChild(d);setTimeout(()=>d.remove(),900);
-}
-
-function genItem(bonusRar){
- let r=Math.random();if(bonusRar)r=r*0.6;
- const rar=r<0.5?0:r<0.82?1:r<0.96?2:3;
- const power=Math.max(1,Math.round((5+S.stage*0.8)*RAR[rar][2]*(0.8+Math.random()*0.4)));
- const slot=SLOTS[Math.floor(Math.random()*4)][0];
- const tier=Math.min(5,Math.floor(power/25));
- return{slot:slot,rar:rar,p:power,name:RAR[rar][0]+' '+NAMES[slot][tier]};
-}
-function addItem(it){
- S.inv.push(it);
- while(S.inv.length>20){
-  let best={};for(const x of S.inv)if(!best[x.slot]||x.p>best[x.slot].p)best[x.slot]=x.p;
-  let wi=-1,wp=1e18;
-  for(let i=0;i<S.inv.length;i++){const x=S.inv[i];if(x.p<best[x.slot]&&x.p<wp){wp=x.p;wi=i;}}
-  if(wi<0)break;
-  S.gold+=Math.floor(S.inv[wi].p*20);S.inv.splice(wi,1);
- }
-}
-
-let newEnemyFlag=false;
-function newEnemy(){S.hp=enemyHpMax();newEnemyFlag=true;}
-function kill(){
- if(S.hp>0)return;
- const g=goldForKill();S.gold=Math.min(1e18,S.gold+g);S.kills++;
- floatNum(null,'+'+fmt(g)+' 🪙','gold');
- if(S.stage<1e6)S.stage++;
- if(S.stage>S.best)S.best=S.stage;
- const ch=Math.random()<(isBoss()?1:0.08);
- if(ch){const it=genItem(false);addItem(it);toast('🎁 Выпал: '+it.name);renderInv();}
- newEnemy();saveSoon();maybeSubmit(false);
-}
-
-let lastTap=0;
-function tap(e){
- if(S.hp<=0)return;
- const now=Date.now();if(now-lastTap<40)return;lastTap=now;
- if(S.energy<1){toast('⚡ Нет энергии — подождите');return;}
- S.energy-=1;haptic();
- let d=clickDmg(),crit=false;
- if(Math.random()*100<critChance()){d*=critMult();crit=true;}
- S.hp-=d;
- floatNum(e,(crit?'КРИТ ':'')+fmt(d),crit?'crit':'norm');
- if(S.hp<=0)kill();
- renderBattle();saveSoon();
-}
-
-let chestNext=Date.now()+45000+Math.random()*45000,chest=null;
-function tickChest(){
- if(chest){if(Date.now()>chest.until){chest=null;renderChest();}return;}
- if(Date.now()<chestNext||curTab!=='battle')return;
- chest={x:8+Math.random()*74,y:15+Math.random()*45,until:Date.now()+12000};
- chestNext=Date.now()+45000+Math.random()*45000;
- renderChest();
-}
-function openChest(){
- if(!chest)return;const r=Math.random();let msg;
- if(r<0.5){const g=Math.floor((50+S.stage*10)*goldMult());S.gold=Math.min(1e18,S.gold+g);msg='+'+fmt(g)+' 🪙';}
- else if(r<0.8){const c=1+Math.floor(Math.random()*3+S.stage/20);S.crystals=Math.min(1e12,S.crystals+c);msg='+'+c+' 💎';}
- else{const it=genItem(true);addItem(it);msg='Предмет: '+it.name;renderInv();}
- toast('🎁 Сундук: '+msg);chest=null;renderChest();haptic();saveSoon();
-}
-
-function todayStr(off){const d=new Date(Date.now()-(off||0));return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
-let giftReady=false;
-function checkDaily(){if(S.daily.last!==todayStr())giftReady=true;}
-function claimGift(){
- if(!giftReady)return;giftReady=false;
- S.daily.streak=(S.daily.last===todayStr(86400000))?S.daily.streak+1:1;
- S.daily.last=todayStr();
- const c=2+S.daily.streak*2,g=Math.floor(100*S.stage*goldMult());
- S.crystals=Math.min(1e12,S.crystals+c);S.gold=Math.min(1e18,S.gold+g);
- toast('🎁 Подарок: +'+c+' 💎, +'+fmt(g)+' 🪙 · серия '+S.daily.streak+' дн.');
- renderBattle();renderTop();saveSoon();
-}
-
-let prestArm=0;
-function tapPrestige(){
- const c=crystalsFor();if(c<1)return;
- const now=Date.now();
- if(now-prestArm>3000){prestArm=now;$('prestBtn').textContent='🌀 Точно? Нажмите ещё раз';setTimeout(()=>{if(Date.now()-prestArm>=2950)renderPrest();},3100);return;}
- prestArm=0;
- S.crystals=Math.min(1e12,S.crystals+c);
- S.rec.unshift({s:S.best,t:Date.now()});S.rec.sort((a,b)=>b.s-a.s);S.rec=S.rec.slice(0,10);
- S.stage=1;S.gold=0;S.kills=0;S.energy=energyMax();
- for(const u of UPG)S.upg[u[0]]=0;
- S.hp=-1;newEnemy();
- toast('🌀 Перерождение! +'+c+' 💎 навсегда (+5% урона и золота за кристалл)');
- renderAll();saveSoon();maybeSubmit(true);
-}
-
-// ---- Leaderboard (Supabase REST) ----
-function lbHeaders(){return{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'};}
-async function maybeSubmit(force){
- if(!SUPABASE_URL||!SUPABASE_KEY)return;
- const now=Date.now();
- if(!force){if(now-S.lastSubTime<30000||S.stage<=S.lastSubStage)return;}
- S.lastSubTime=now;S.lastSubStage=S.stage;
- const name=(S.name||'Игрок').slice(0,16);
- try{await fetch(SUPABASE_URL+'/rest/v1/leaderboard',{method:'POST',headers:lbHeaders(),body:JSON.stringify({name:name,stage:S.stage,crystals:S.crystals})});}catch(e){}
-}
-async function loadLb(){
- const box=$('lbList');
- if(!SUPABASE_URL||!SUPABASE_KEY){box.innerHTML='<div class="muted">Рейтинг выключен: не заданы ключи Supabase.</div>';return;}
- box.innerHTML='<div class="muted">Загрузка…</div>';
  try{
-  const r=await fetch(SUPABASE_URL+'/rest/v1/leaderboard?select=name,stage,crystals&order=stage.desc,crystals.desc&limit=10',{headers:lbHeaders()});
-  const rows=await r.json();
-  if(!Array.isArray(rows))throw new Error('bad response');
-  if(!rows.length){box.innerHTML='<div class="muted">Пока пусто — станьте первым!</div>';return;}
-  const medal=['🥇','🥈','🥉'];
-  box.innerHTML=rows.map((x,i)=>{
-   const me=x.name===(S.name||'Игрок');
-   return '<div class="lbr'+(me?' me':'')+'"><div class="med">'+(medal[i]||(i+1))+'</div><div class="n">'+String(x.name).slice(0,16)+'</div><div>эп. '+Math.floor(cl(x.stage,0))+' · 💎'+Math.floor(cl(x.crystals,0))+'</div></div>';
-  }).join('');
- }catch(e){box.innerHTML='<div class="muted">Рейтинг недоступен. Проверьте таблицу и ключи Supabase.</div>';}
+  var raw=localStorage.getItem('dq_save');if(!raw)return JSON.parse(JSON.stringify(DEF));
+  var d=JSON.parse(raw);var o=JSON.parse(JSON.stringify(DEF));
+  o.gold=Math.min(num(d.gold,0),1e15);o.crystals=Math.min(num(d.crystals,0),1e9);
+  o.stage=Math.max(1,Math.min(num(d.stage,1),1e6));
+  for(var k in o.up)o.up[k]=Math.min(num(d.up&&d.up[k],0),1e6);
+  if(Array.isArray(d.inv))o.inv=d.inv.filter(function(it){return it&&SLOTS[it.slot]&&it.rarity>=0&&it.rarity<=3&&isFinite(it.power)&&it.power>=0;}).slice(0,40);
+  if(Array.isArray(d.rec))o.rec=d.rec.filter(function(r){return r&&isFinite(r.stage);}).slice(0,10);
+  o.name=typeof d.name==='string'?d.name.slice(0,16):'';
+  o.streak=Math.min(num(d.streak,0),365);o.lastDaily=typeof d.lastDaily==='string'?d.lastDaily:'';
+  o.lastSeen=num(d.lastSeen,Date.now());
+  return o;
+ }catch(e){return JSON.parse(JSON.stringify(DEF));}
+}
+function save(){S.lastSeen=Date.now();try{localStorage.setItem('dq_save',JSON.stringify(S));}catch(e){}}
+setInterval(save,10000);window.addEventListener('pagehide',save);
+
+// ===== РАСЧЁТЫ =====
+function zoneIdx(){return Math.min(ZONES.length-1,Math.floor((S.stage-1)/10));}
+function rebirthMult(){return 1+0.05*S.crystals;}
+function best(slot){var b=null;for(var i=0;i<S.inv.length;i++){var it=S.inv[i];if(it.slot===slot&&(!b||it.power>b.power))b=it;}return b;}
+function tapBase(){var w=best('weapon');return (1+2*S.up.sword+(w?w.power:0))*rebirthMult();}
+function critChance(){var a=best('amulet');return Math.min(60,S.up.precision*1.5+(a?a.power*0.2:0));}
+function critMult(){return 2+0.5*S.up.rage;}
+function goldMult(){var r=best('ring');return (1+0.15*S.up.greed)*(r?(1+r.power*0.005):1);}
+function dps(){var a=best('armor');return S.up.companion*(a?(1+a.power*0.005):1)*rebirthMult();}
+function upCost(u){return Math.floor(u.c*Math.pow(u.m,S.up[u.k]));}
+function newEnemy(){var boss=S.stage%10===0;var hpMax=Math.max(10,Math.floor(15*Math.pow(1.22,S.stage-1)));if(boss)hpMax=Math.floor(hpMax*6);E={hpMax:hpMax,hp:hpMax,boss:boss};}
+function goldReward(){var g=(4+2*S.stage)*goldMult();if(E.boss)g*=10;return Math.max(1,Math.floor(g));}
+
+// ===== БОЙ =====
+function floatNum(x,y,txt,cls){var z=document.getElementById('tapzone');var s=document.createElement('div');s.className='fnum '+cls;s.textContent=txt;s.style.left=Math.min(x,window.innerWidth-60)+'px';s.style.top=y+'px';z.appendChild(s);setTimeout(function(){s.remove();},1000);}
+function dmgEnemy(d,crit,ev){
+ if(!E||E.hp<=0)return;
+ E.hp-=d;buzz();
+ if(ev)floatNum(ev.x,ev.y,(crit?'КРИТ +':'-')+fmt(d),crit?'crit':'norm');
+ if(E.hp<=0){
+  S.gold+=goldReward();
+  if(E.boss){toast('👑 Босс повержен! +'+fmt(goldReward())+' золота');dropItem(1);}
+  else if(Math.random()<0.08)dropItem(0);
+  S.stage=Math.min(S.stage+1,1e6);newEnemy();
+ }else if(ev)floatNum(ev.x,ev.y-24,(crit?'КРИТ +':'-')+fmt(d),crit?'crit':'norm');
+ render();
+}
+document.getElementById('emon').addEventListener('pointerdown',function(e){
+ var d=tapBase(),isC=Math.random()*100<critChance();
+ if(isC)d=Math.floor(d*critMult());
+ dmgEnemy(Math.max(1,Math.floor(d)),isC,{x:e.clientX-10,y:e.clientY-30});
+});
+setInterval(function(){
+ if(dps()>0&&E&&E.hp>0){E.hp-=dps();if(E.hp<=0){S.gold+=goldReward();if(E.boss)dropItem(1);else if(Math.random()<0.08)dropItem(0);S.stage=Math.min(S.stage+1,1e6);newEnemy();}render();}
+},1000);
+
+// ===== ПРЕДМЕТЫ =====
+var PREFIX=['Ржавый','Простой','Крепкий','Закалённый','Рунный','Проклятый','Пламенный','Ледяной','Древний','Драконий'];
+function dropItem(fromChest){
+ var roll=Math.random()*100,r=0;
+ if(fromChest){r=roll<40?0:roll<70?1:roll<90?2:3;}
+ else{r=roll<60?0:roll<85?1:roll<97?2:3;}
+ var slots=Object.keys(SLOTS);var slot=slots[Math.floor(Math.random()*4)];
+ var power=Math.max(1,Math.floor(S.stage*(1+r*2.5)*(0.8+Math.random()*0.5)));
+ var name=PREFIX[Math.min(9,Math.floor(S.stage/5)+r)]+' '+SLOTS[slot].n.toLowerCase();
+ if(S.inv.length>=40)S.inv.shift();
+ S.inv.push({slot:slot,rarity:r,power:power,name:name});
+ toast(SLOTS[slot].i+' '+RAR[r].n+': '+name+' (+'+power+')');
+ render();
+}
+function sellItem(i){var it=S.inv[i];if(!it)return;S.gold+=Math.floor(it.power*2);S.inv.splice(i,1);render();}
+
+// ===== СУНДУКИ =====
+function scheduleChest(){
+ clearTimeout(chestTimer);
+ chestTimer=setTimeout(spawnChest,(45+Math.random()*45)*1000);
+}
+function spawnChest(){
+ var c=document.getElementById('chest');
+ if(c.style.display==='block'){scheduleChest();return;}
+ c.style.display='block';
+ c.style.left=(20+Math.random()*50)+'%';
+ c.style.top=(140+Math.random()*120)+'px';
+ var gone=setTimeout(function(){c.style.display='none';scheduleChest();},12000);
+ c.onclick=function(){clearTimeout(gone);c.style.display='none';buzz();
+  var roll=Math.random();
+  if(roll<0.5){var g=Math.floor((30+8*S.stage)*goldMult());S.gold+=g;toast('🎁 Сундук: +'+fmt(g)+' золота');}
+  else if(roll<0.8){var k=1+Math.floor(Math.random()*3);S.crystals+=k;toast('🎁 Сундук: +'+k+' 💎');}
+  else dropItem(1);
+  render();scheduleChest();};
+}
+scheduleChest();
+
+// ===== ПЕРЕРОЖДЕНИЕ =====
+function rebirthGain(){return Math.max(1,Math.floor(S.stage/5));}
+function doRebirth(){
+ if(S.stage<20)return;
+ var gain=rebirthGain();
+ S.rec.push({stage:S.stage,crystals:S.crystals,date:new Date().toLocaleDateString('ru-RU')});
+ S.rec.sort(function(a,b){return b.stage-a.stage;});S.rec=S.rec.slice(0,10);
+ S.crystals+=gain;S.gold=0;S.stage=1;
+ for(var k in S.up)S.up[k]=0;
+ newEnemy();save();toast('🌀 Перерождение! +'+gain+' 💎 навсегда');switchTab('up');render();
 }
 
-// ---- Render ----
-let curTab='battle';
-function setTab(t){
- curTab=t;
- document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
- document.querySelectorAll('.tab').forEach(s=>s.classList.add('hidden'));
- $('tab-'+t).classList.remove('hidden');
- if(t==='lb')loadLb();
- if(t==='rec')renderRec();
- if(t==='inv')renderInv();
- if(t==='upg')renderUpg();
- renderBattle();
+// ===== ЕЖЕДНЕВНЫЙ ПОДАРОК =====
+function dailyCheck(){
+ var today=new Date().toDateString();
+ if(S.lastDaily===today)return;
+ var yest=new Date(Date.now()-864e5).toDateString();
+ S.streak=(S.lastDaily===yest)?S.streak+1:1;
+ S.lastDaily=today;
+ var k=2+S.streak,g=Math.floor(50*S.streak*Math.max(1,S.stage/5));
+ S.crystals+=k;S.gold+=g;
+ setTimeout(function(){toast('🎁 День '+S.streak+' подряд: +'+k+' 💎, +'+fmt(g)+' золота');},800);
+ save();
 }
-function renderTop(){
- $('hGold').textContent=fmt(S.gold);$('hCr').textContent=fmt(S.crystals);
- const zi=Math.floor((S.stage-1)/10)%6;
- $('hZone').textContent=ZONES[zi][0]+' '+ZONES[zi][1];
- const em=energyMax();
- $('ebarFill').style.width=Math.max(0,Math.min(100,S.energy/em*100))+'%';
+
+// ===== ОФФЛАЙН-ДОХОД =====
+function offlineCheck(){
+ var dt=Math.min((Date.now()-S.lastSeen)/1000,8*3600);
+ var g=Math.floor(dps()*dt*0.5);
+ if(g>0&&dps()>0){S.gold+=g;setTimeout(function(){toast('💤 Пока вас не было: +'+fmt(g)+' золота');},400);}
 }
-function renderChest(){
- const el=$('chest');
- if(chest){el.classList.remove('hidden');el.style.left=chest.x+'%';el.style.top=chest.y+'%';}
- else el.classList.add('hidden');
+
+// ===== UI =====
+function fmt(n){n=Math.floor(n);if(n>=1e9)return (n/1e9).toFixed(1)+'B';if(n>=1e6)return (n/1e6).toFixed(1)+'M';if(n>=1e4)return (n/1e3).toFixed(1)+'K';return String(n);}
+function render(){
+ document.getElementById('hgold').textContent='🪙 '+fmt(S.gold);
+ document.getElementById('hcr').textContent='💎 '+fmt(S.crystals);
+ var z=ZONES[zoneIdx()];document.getElementById('hzone').textContent=z.n+' '+z.i;
+ document.getElementById('ename').textContent=(E.boss?'👑 БОСС — ':'')+'Этап '+S.stage;
+ var p=Math.max(0,E.hp/E.hpMax*100);
+ document.getElementById('ehpfill').style.width=p+'%';
+ document.getElementById('ehptext').textContent=fmt(Math.max(0,E.hp))+' / '+fmt(E.hpMax)+(dps()>0?'  ·  🐾 '+fmt(dps())+'/с':'');
+ document.getElementById('emon').textContent=EMO[zoneIdx()][(S.stage-1)%4];
+ renderUp();renderBag();renderRec();renderRebirth();
 }
-function renderBattle(){
- renderTop();
- $('stageLbl').textContent='Этап '+S.stage+(isBoss()?' · босс!':'');
- $('bossBadge').classList.toggle('hidden',!isBoss());
- const zi=Math.floor((S.stage-1)/10)%6;
- $('enemy').textContent=isBoss()?'☠️':EMO[zi][S.stage%5];
- const m=enemyHpMax();
- $('hpFill').style.width=Math.max(0,Math.min(100,(S.hp||0)/m*100))+'%';
- $('hpLbl').textContent=fmt(Math.max(0,Math.ceil(S.hp||0)))+' / '+fmt(m);
- renderPrest();
- $('giftBtn').classList.toggle('hidden',!giftReady);
- if(giftReady)$('giftBtn').textContent='🎁 Забрать подарок (серия '+Math.max(1,S.daily.streak)+')';
+function renderRebirth(){
+ var can=S.stage>=20;
+ document.getElementById('rbinfo').textContent=can?'Получите '+rebirthGain()+' 💎 и +'+(5*rebirthGain())+'% к урону и золоту навсегда. Золото и апгрейды сбросятся, снаряжение останется. (Рекорд забега сохранится)':'Откроется на этапе 20 (сейчас: '+S.stage+')';
+ document.getElementById('rbbtn').disabled=!can;
 }
-function renderPrest(){
- const c=crystalsFor(),b=$('prestBtn');
- b.disabled=c<1;
- b.textContent=c<1?'🌀 Перерождение (нужен этап 20+)':'🌀 Перерождение: +'+c+' 💎';
+function renderUp(){
+ var el=document.getElementById('uplist');el.innerHTML='';
+ UPD.forEach(function(u){
+  var cost=upCost(u);
+  var eff={sword:'+'+(2*rebirthMult()).toFixed(1)+' урона/ур.',companion:'+'+(1*rebirthMult()).toFixed(1)+' урона/с',precision:'+'+1.5+'% крита',rage:'+'+0.5+' к силе крита',greed:'+'+15+'% золота'}[u.k];
+  var d=document.createElement('div');d.className='card';
+  d.innerHTML='<div class="row"><h3>'+u.n+' <span class="lvl">ур. '+S.up[u.k]+'</span></h3></div><div class="d">'+u.d+': '+eff+'</div><button class="mini'+(S.gold>=cost?'':'" disabled')+'" data-k="'+u.k+'">Купить · 🪙 '+fmt(cost)+'</button>';
+  el.appendChild(d);
+ });
+ el.querySelectorAll('.mini').forEach(function(b){
+  b.onclick=function(){var u=UPD.find(function(x){return x.k===b.dataset.k;});var c=upCost(u);
+   if(S.gold>=c){S.gold-=c;S.up[u.k]++;buzz();save();render();}};
+ });
 }
-function renderUpg(){
- $('upgList').innerHTML=UPG.map((u,i)=>{
-  const lvl=S.upg[u[0]],cost=upgCost(i),can=S.gold>=cost;
-  return '<div class="upg"><div class="ic">'+u[1]+'</div><div class="info"><div class="nm">'+u[2]+' <span class="lv">ур. '+lvl+'</span></div><div class="eff">'+u[5]+'</div></div><button class="buy" data-i="'+i+'" '+(can?'':'disabled')+'>🪙 '+fmt(cost)+'</button></div>';
- }).join('');
- document.querySelectorAll('#upgList .buy').forEach(b=>b.addEventListener('click',()=>buyUpg(+b.dataset.i)));
-}
-function buyUpg(i){
- const cost=upgCost(i);if(S.gold<cost)return;
- S.gold-=cost;S.upg[UPG[i][0]]++;haptic();
- if(UPG[i][0]==='batt')S.energy=Math.min(S.energy,energyMax());
- renderUpg();renderTop();saveSoon();
-}
-function renderInv(){
- $('slotGrid').innerHTML=SLOTS.map(s=>{
-  const p=itemBonus(s[0]);
-  return '<div class="slot"><div class="t">'+s[1]+' '+s[2]+' <span style="color:#9aa4b2">('+s[3]+')</span></div><div class="v">'+(p?'+'+p+'% · '+S.inv.filter(x=>x.slot===s[0]).sort((a,b)=>b.p-a.p)[0].name:'— пусто')+'</div></div>';
- }).join('');
- const sorted=S.inv.slice().sort((a,b)=>b.p-a.p);
- const best={};for(const x of S.inv)if(!best[x.slot]||x.p>best[x.slot].p)best[x.slot]=x;
- $('invList').innerHTML=sorted.length?sorted.map((it,i)=>{
-  const isBest=best[it.slot]===it;
-  return '<div class="inv"><span>'+SLOTS.find(s=>s[0]===it.slot)[1]+'</span><div class="nm" style="color:'+RAR[it.rar][1]+'">'+it.name+' (+'+it.p+'%)</div>'+(isBest?'<span class="eq">надето</span>':'<button class="sell" data-i="'+i+'">Продать 🪙'+Math.floor(it.p*20)+'</button>')+'</div>';
- }).join(''):'<div class="muted">Пока ничего не выпало. Боссы роняют предметы всегда!</div>';
- document.querySelectorAll('#invList .sell').forEach(b=>b.addEventListener('click',()=>{
-  const it=sorted[+b.dataset.i];const idx=S.inv.indexOf(it);
-  if(idx>=0){S.gold=Math.min(1e18,S.gold+Math.floor(it.p*20));S.inv.splice(idx,1);renderInv();renderTop();saveSoon();}
- }));
+function renderBag(){
+ var sl=document.getElementById('slots');sl.innerHTML='';
+ Object.keys(SLOTS).forEach(function(k){
+  var b=best(k);
+  var d=document.createElement('div');d.className='slotrow';
+  d.innerHTML='<span class="ic">'+SLOTS[k].i+'</span><div style="flex:1"><div style="font-weight:700;font-size:14px">'+SLOTS[k].n+'</div><div style="font-size:12px;color:#8d96c4">'+(b?b.name+' · +'+b.power:'— пусто —')+'</div></div>';
+  sl.appendChild(d);
+ });
+ var il=document.getElementById('invlist');il.innerHTML='';
+ if(!S.inv.length)il.innerHTML='<div class="d" style="color:#8d96c4">Пока пусто — бейте врагов, они роняют снаряжение!</div>';
+ S.inv.forEach(function(it,i){
+  var d=document.createElement('div');d.className='item r'+it.rarity;
+  d.innerHTML='<span>'+SLOTS[it.slot].i+' '+it.name+' · +'+it.power+'</span><button class="mini sell">🪙 '+fmt(it.power*2)+'</button>';
+  d.querySelector('button').onclick=function(){sellItem(i);};
+  il.appendChild(d);
+ });
 }
 function renderRec(){
- $('recList').innerHTML=S.rec.length?S.rec.map((r,i)=>{
-  const medal=['🥇','🥈','🥉'];
-  return '<div class="rec"><div class="med">'+(medal[i]||(i+1))+'</div><div style="flex:1">Этап '+r.s+'</div><div style="color:#8890b8;font-size:12px">'+new Date(r.t).toLocaleDateString()+'</div></div>';
- }).join(''):'<div class="muted">Сделайте перерождение — и первый рекорд появится здесь.</div>';
+ var el=document.getElementById('reclist');el.innerHTML='';
+ if(!S.rec.length){el.innerHTML='<div class="d" style="color:#8d96c4">Переживите перерождение — здесь появятся ваши лучшие забеги.</div>';return;}
+ var medals=['🥇','🥈','🥉'];
+ S.rec.forEach(function(r,i){
+  var d=document.createElement('div');d.className='rec-item';
+  d.innerHTML='<span>'+(medals[i]||(i+1)+' ')+' Этап '+r.stage+'</span><span style="color:#8d96c4">'+r.date+' · 💎 '+r.crystals+'</span>';
+  el.appendChild(d);
+ });
 }
-function renderAll(){renderBattle();renderUpg();renderInv();renderRec();}
 
-// ---- init ----
-(function init(){
- if(S.name)$('lbName').value=S.name;
- const em=energyMax();
- if(S.hp<=0||S.hp>em*1e9||S.hp>enemyHpMax()*1.001)newEnemy();
- if(S.energy>em)S.energy=em;
- if(S.lastSeen){
-  const dt=Math.min((Date.now()-S.lastSeen)/1000,8*3600);
-  const g=Math.floor(compDps()*dt*2);
-  if(g>0){S.gold=Math.min(1e18,S.gold+g);setTimeout(()=>toast('💤 Пока вас не было: +'+fmt(g)+' 🪙'),800);}
- }
- checkDaily();
- newEnemyFlag=false;
- renderAll();
-})();
+// ===== РЕЙТИНГ (Supabase) =====
+function lbHeaders(){return {'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json'};}
+function lbMsg(t,cls){var m=document.getElementById('lbmsg');m.textContent=t;m.className=cls||'';}
+function renderBoard(rows){
+ var el=document.getElementById('lblist');el.innerHTML='';
+ if(!rows.length){el.innerHTML='<div class="d" style="color:#8d96c4">Пока пусто — станьте первым!</div>';return;}
+ var medals=['🥇','🥈','🥉'];
+ rows.forEach(function(r,i){
+  var d=document.createElement('div');d.className='lb-item'+(r.name===S.name?' me':'');
+  d.innerHTML='<span>'+(medals[i]||(i+1)+' ')+'</span><span>'+String(r.name).replace(/[<>&]/g,'')+'</span><span class="st">эт. '+r.stage+' · 💎 '+r.crystals+'</span>';
+  el.appendChild(d);
+ });
+}
+async function refreshBoard(){
+ if(!SUPA_URL||!SUPA_KEY){lbMsg('Рейтинг выключен: не заданы ключи Supabase','err');return;}
+ lbMsg('Загружаю…');
+ try{
+  var r=await fetch(SUPA_URL+'/rest/v1/leaderboard?select=name,stage,crystals&order=stage.desc&limit=10',{headers:lbHeaders()});
+  if(!r.ok){var t=await r.text();lbMsg('HTTP '+r.status+': '+t.slice(0,120)+(r.status===404?' — нет таблицы leaderboard':'')+(r.status===401?' — RLS закрыл доступ, выполните SQL с политиками':''),'err');return;}
+  renderBoard(await r.json());lbMsg('Таблица обновлена','ok');
+ }catch(e){lbMsg('Сеть недоступна: '+e.message,'err');}
+}
+async function sendResult(){
+ var name=document.getElementById('lbname').value.trim();
+ if(!name){lbMsg('Введите имя','err');return;}
+ S.name=name;save();
+ if(!SUPA_URL||!SUPA_KEY){lbMsg('Рейтинг выключен: не заданы ключи Supabase','err');return;}
+ lbMsg('Отправляю…');
+ try{
+  // ищем свою запись по имени — обновляем её, а не создаём новую
+  var r=await fetch(SUPA_URL+'/rest/v1/leaderboard?select=id,stage&name=eq.'+encodeURIComponent(name),{headers:lbHeaders()});
+  if(!r.ok){lbMsg('HTTP '+r.status+': '+(await r.text()).slice(0,120),'err');return;}
+  var rows=await r.json();
+  var resp;
+  if(rows.length){
+   if(rows[0].stage>=S.stage){lbMsg('В таблице уже есть результат не хуже ('+rows[0].stage+' этап) — лучший сохраняется','ok');refreshBoard();return;}
+   resp=await fetch(SUPA_URL+'/rest/v1/leaderboard?name=eq.'+encodeURIComponent(name),{method:'PATCH',headers:lbHeaders(),body:JSON.stringify({stage:S.stage,crystals:S.crystals})});
+  }else{
+   resp=await fetch(SUPA_URL+'/rest/v1/leaderboard',{method:'POST',headers:lbHeaders(),body:JSON.stringify({name:name,stage:S.stage,crystals:S.crystals})});
+  }
+  if(!resp.ok){lbMsg('HTTP '+resp.status+': '+(await resp.text()).slice(0,120),'err');return;}
+  lbMsg('Результат в таблице!','ok');buzz();refreshBoard();
+ }catch(e){lbMsg('Сеть недоступна: '+e.message,'err');}
+}
+document.getElementById('lbrefresh').onclick=refreshBoard;
+document.getElementById('lbsend').onclick=sendResult;
 
-$('enemy').addEventListener('pointerdown',tap);
-$('chest').addEventListener('pointerdown',openChest);
-$('giftBtn').addEventListener('click',claimGift);
-$('prestBtn').addEventListener('click',tapPrestige);
-$('lbSend').addEventListener('click',()=>{maybeSubmit(true).then(()=>{toast('📤 Результат отправлен');loadLb();});});
-$('lbRef').addEventListener('click',loadLb);
-$('lbName').addEventListener('input',e=>{S.name=e.target.value.slice(0,16);saveSoon();});
-document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));
+// ===== ВКЛАДКИ =====
+function switchTab(v){
+ document.querySelectorAll('.view').forEach(function(x){x.classList.remove('on');});
+ document.getElementById('v-'+v).classList.add('on');
+ document.querySelectorAll('.tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});
+ if(v==='lb')refreshBoard();
+}
+document.querySelectorAll('.tabs button').forEach(function(b){b.onclick=function(){switchTab(b.dataset.v);};});
+document.getElementById('rbbtn').onclick=doRebirth;
 
-setInterval(()=>{
- S.energy=Math.min(energyMax(),S.energy+(1+S.upg.batt*0.2)*0.25);
- if(S.hp>0&&compDps()>0){S.hp-=compDps()*0.25;if(S.hp<=0)kill();}
- tickChest();renderBattle();
-},250);
-setInterval(save,5000);
-document.addEventListener('visibilitychange',()=>{if(document.hidden)save();});
-window.addEventListener('pagehide',save);
+// ===== СТАРТ =====
+newEnemy();dailyCheck();offlineCheck();
+var nb=document.getElementById('lbname');if(S.name)nb.value=S.name;
+render();
 </script>
 </body>
 </html>
